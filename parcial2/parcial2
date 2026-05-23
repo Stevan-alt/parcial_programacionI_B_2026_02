@@ -1,0 +1,86 @@
+def leer_entero_positivo(prompt, permitir_cero=False):
+    while True:
+        try:
+            v = int(input(prompt))
+            if permitir_cero:
+                if v >= 0:
+                    return v
+            else:
+                if v > 0:
+                    return v
+            if permitir_cero:
+                print("Ingrese un número entero no negativo.")
+            else:
+                print("Ingrese un número entero positivo.")
+        except ValueError:
+            print("Entrada inválida. Ingrese un número entero.")
+
+print("Gestión de consumo en comedor universitario\n")
+tipos = leer_entero_positivo("¿Cuántos tipos de comida se ofrecerán? ")
+nombres = ["" for _ in range(tipos)]
+tipos_comida = ["" for _ in range(tipos)]
+cantidad_disponible = [0 for _ in range(tipos)]
+cantidad_consumida = [0 for _ in range(tipos)]
+
+print("\n--- Registro de comidas ---")
+for i in range(tipos):
+    print(f"\nComida {i+1}:")
+    nombre = input("  Nombre de la comida: ").strip()
+    while nombre == "":
+        nombre = input("  Nombre no puede estar vacío. Ingrese nombre: ").strip()
+    nombres[i] = nombre
+
+    tipo = input("  Tipo (ej. principal, postre, bebida): ").strip()
+    tipos_comida[i] = tipo if tipo != "" else "Desconocido"
+
+    cant = leer_entero_positivo("  Cantidad disponible inicial: ", permitir_cero=True)
+    cantidad_disponible[i] = cant
+    cantidad_consumida[i] = 0
+estudiantes = leer_entero_positivo("\n¿Cuántos estudiantes asistirán al comedor? ", permitir_cero=True)
+
+print("\n--- Atención a estudiantes ---")
+for e in range(estudiantes):
+    print(f"\nEstudiante {e+1}:")
+    nombre_est = input("  Nombre del estudiante: ").strip()
+    if nombre_est == "":
+        nombre_est = f"Estudiante{e+1}"
+
+    deseada = input("  Comida deseada (nombre): ").strip()
+    while deseada == "":
+        deseada = input("  Ingrese el nombre de la comida deseada: ").strip()
+    idx = -1
+    for i in range(tipos):
+        if nombres[i].lower() == deseada.lower():
+            idx = i
+            break
+
+    if idx == -1:
+        print("  La comida solicitada no existe en el menú.")
+    else:
+        if cantidad_disponible[idx] > 0:
+            cantidad_disponible[idx] -= 1
+            cantidad_consumida[idx] += 1
+            print(f"  {nombre_est} ha sido servido con {nombres[idx]}. Quedan {cantidad_disponible[idx]} unidades.")
+        else:
+            print(f"  Lo siento, {nombres[idx]} está agotado.")
+print("\n--- Resumen final ---")
+total_servidos = 0
+for i in range(tipos):
+    restante = cantidad_disponible[i]
+    consumidas = cantidad_consumida[i]
+    print(f"Comida: {nombres[i]} | Tipo: {tipos_comida[i]} | Restante: {restante} | Consumida: {consumidas}")
+    total_servidos += consumidas
+
+print(f"\nTotal general de comidas servidas: {total_servidos}")
+if tipos > 0:
+    idx_max = 0
+    idx_min = 0
+    for i in range(1, tipos):
+        if cantidad_consumida[i] > cantidad_consumida[idx_max]:
+            idx_max = i
+        if cantidad_consumida[i] < cantidad_consumida[idx_min]:
+            idx_min = i
+    print(f"Comida con mayor consumo: {nombres[idx_max]} (consumidas: {cantidad_consumida[idx_max]})")
+    print(f"Comida con menor consumo: {nombres[idx_min]} (consumidas: {cantidad_consumida[idx_min]})")
+else:
+    print("No hay tipos de comida registrados.")
