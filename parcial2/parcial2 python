@@ -63,7 +63,7 @@ for e in range(estudiantes):
             print(f"  {nombre_est} ha sido servido con {nombres[idx]}. Quedan {cantidad_disponible[idx]} unidades.")
         else:
             print(f"  Lo siento, {nombres[idx]} está agotado.")
-print("\n--- Resumen final ---")
+print(Resumen final)
 total_servidos = 0
 for i in range(tipos):
     restante = cantidad_disponible[i]
